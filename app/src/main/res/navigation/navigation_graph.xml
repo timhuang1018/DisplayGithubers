@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/navigation_graph"
-    app:startDestination="@id/firstPage">
+    app:startDestination="@id/usersPage">
 
     <fragment
-        android:id="@+id/firstPage"
+        android:id="@+id/usersPage"
         android:name="com.tumhuang.displaygithubers.ui.UsersPage"
-        android:label="FirstPage" >
+        android:label="UsersPage" >
         <action
             android:id="@+id/action_firstPage_to_secondPage"
-            app:destination="@id/secondPage" />
+            app:destination="@id/userPage" />
     </fragment>
     <fragment
-        android:id="@+id/secondPage"
+        android:id="@+id/userPage"
         android:name="com.tumhuang.displaygithubers.ui.UserPage"
-        android:label="SecondPage" />
+        android:label="UserPage" />
 </navigation>
