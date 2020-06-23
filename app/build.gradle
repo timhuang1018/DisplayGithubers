@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: "androidx.navigation.safeargs.kotlin"
 
 android {
     compileSdkVersion 29
@@ -33,7 +34,17 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+    //for asynchronous, request, parsing
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.7'
     implementation 'com.squareup.retrofit2:retrofit:2.6.0'
     implementation "com.squareup.retrofit2:converter-moshi:2.6.0"
+
+    //for navigation
+    def nav_version = "2.3.0-rc01"
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    //for image processing
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 }

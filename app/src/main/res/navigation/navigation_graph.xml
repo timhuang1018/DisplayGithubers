@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/navigation_graph"
+    app:startDestination="@id/firstPage">
+
+    <fragment
+        android:id="@+id/firstPage"
+        android:name="com.tumhuang.displaygithubers.ui.UsersPage"
+        android:label="FirstPage" >
+        <action
+            android:id="@+id/action_firstPage_to_secondPage"
+            app:destination="@id/secondPage" />
+    </fragment>
+    <fragment
+        android:id="@+id/secondPage"
+        android:name="com.tumhuang.displaygithubers.ui.UserPage"
+        android:label="SecondPage" />
+</navigation>
