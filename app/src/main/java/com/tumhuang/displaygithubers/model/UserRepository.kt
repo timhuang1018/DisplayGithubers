@@ -8,8 +8,13 @@ import com.tumhuang.displaygithubers.helper.EventWrapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+/**
+ * make UserRepository an interface for testable capability in future
+ */
 class UserRepositoryImpl(private val scope: CoroutineScope):UserRepository {
+
     private val remoteApi = RemoteApi.instance
+    //use page to count to make sure only fetch 100 data
     private var page = 1
     private val perPage = 20
     private var sinceId = 0
@@ -20,20 +25,26 @@ class UserRepositoryImpl(private val scope: CoroutineScope):UserRepository {
     ){
         scope.launch {
             try {
+                //two cases we don't fetch more data
+                //1.back from navigation
+                //2.already fetch 100 data
                 if ((init && page>1) || page>5){
                     return@launch
                 }
+
                 requestState.isLoading.value = true
                 page++
                 val result = remoteApi.getUsers(sinceId,perPage)
                 Log.d("UserRepositoryImpl","result size:${result.size}")
 
+                //record the last id
                 if (result.isNotEmpty()){
                     sinceId = result.last().id
                 }
                 requestState.data.value = requestState.data.value?.let { list -> list + result } ?: result
-                //simply catch every error and toast an error message
+
             }catch (e:Exception){
+                //simply catch every error and toast an error message
                 Log.e("getUsers",e.message)
                 requestState.error.value = EventWrapper("fetch data failed")
             }finally {

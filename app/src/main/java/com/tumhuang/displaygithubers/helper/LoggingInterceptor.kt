@@ -5,7 +5,7 @@ import okhttp3.Interceptor
 import okhttp3.Response
 
 /**
- * This interceptor is for logging all request
+ * This interceptor is for logging every request
  */
 class LoggingInterceptor : Interceptor {
 
