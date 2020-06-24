@@ -1,6 +1,5 @@
 package com.tumhuang.displaygithubers.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +21,6 @@ class UsersAdapter(val listener: AdapterListener): ListAdapter<RecyclerItem,Recy
         )
     }
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        Log.e("UsersAdapter","on bind called")
         val item = getItem(position)
         if (holder is UserViewHolder && item is User){
             holder.bind(user = item,listener = listener)
@@ -34,7 +32,7 @@ class UsersAdapter(val listener: AdapterListener): ListAdapter<RecyclerItem,Recy
 class UserViewHolder(itemView:View):RecyclerView.ViewHolder(itemView){
     fun bind(user: User,listener: AdapterListener){
         itemView.tv_login.text = user.login
-        with(itemView.headshot){
+        with(itemView.iv_headshot){
             Glide.with(this)
                 .load(user.headPic)
                 .thumbnail(0.05f)

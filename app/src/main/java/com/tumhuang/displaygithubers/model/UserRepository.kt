@@ -1,44 +1,74 @@
 package com.tumhuang.displaygithubers.model
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.tumhuang.displaygithubers.config.RequestState
-import com.tumhuang.displaygithubers.config.RequestUsers
 import com.tumhuang.displaygithubers.data.User
+import com.tumhuang.displaygithubers.data.UserDetail
 import com.tumhuang.displaygithubers.helper.EventWrapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class UserRepositoryImpl(private val scope: CoroutineScope):UserRepository {
     private val remoteApi = RemoteApi.instance
-    private val user = MutableLiveData<List<User>>()
-    private val isLoading = MutableLiveData<Boolean>()
-    private val error = MutableLiveData<EventWrapper<String>>()
     private var page = 1
     private val perPage = 20
+    private var sinceId = 0
 
-    override fun getUsers(init: Boolean): RequestUsers {
+    override fun getUsers(
+        init: Boolean,
+        requestState: RequestState<List<User>>
+    ){
         scope.launch {
             try {
                 if ((init && page>1) || page>5){
                     return@launch
                 }
-                isLoading.value = true
-                val result = remoteApi.getUsers(page++,perPage)
-                user.value = user.value?.let { list -> list + result } ?:  result
-                //simple catch every error and stop action
+                requestState.isLoading.value = true
+                page++
+                val result = remoteApi.getUsers(sinceId,perPage)
+                Log.d("UserRepositoryImpl","result size:${result.size}")
+
+                if (result.isNotEmpty()){
+                    sinceId = result.last().id
+                }
+                requestState.data.value = requestState.data.value?.let { list -> list + result } ?: result
+                //simply catch every error and toast an error message
             }catch (e:Exception){
                 Log.e("getUsers",e.message)
-                error.value = EventWrapper("fetch data failed")
+                requestState.error.value = EventWrapper("fetch data failed")
             }finally {
-                isLoading.value = false
+                requestState.isLoading.value = false
             }
         }
-        return RequestUsers(user,isLoading,error)
+    }
+
+    override fun getUser(
+        userName: String,
+        requestState: RequestState<UserDetail>
+    ) {
+        scope.launch {
+            try {
+                requestState.isLoading.value = true
+
+                requestState.data.value = remoteApi.getUser(userName)
+            }catch (e:Exception){
+                Log.e("getUsers",e.message)
+                requestState.error.value = EventWrapper("fetch data failed")
+            }finally {
+                requestState.isLoading.value = false
+            }
+        }
     }
 }
 
 
 interface UserRepository{
-    fun getUsers(init:Boolean):RequestUsers
+    fun getUsers(
+        init: Boolean,
+        requestState: RequestState<List<User>>
+    )
+    fun getUser(
+        userName: String,
+        requestState: RequestState<UserDetail>
+    )
 }

@@ -14,5 +14,9 @@
     <fragment
         android:id="@+id/userPage"
         android:name="com.tumhuang.displaygithubers.ui.UserPage"
-        android:label="UserPage" />
+        android:label="UserPage" >
+        <argument
+            android:name="login"
+            app:argType="string" />
+    </fragment>
 </navigation>
