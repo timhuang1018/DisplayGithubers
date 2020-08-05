@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 /**
  * make UserRepository an interface for testable capability in future
  */
-class UserRepositoryImpl(private val scope: CoroutineScope):UserRepository {
+class UserRepositoryImpl:UserRepository {
 
     private val remoteApi = RemoteApi.instance
     //use page to count to make sure only fetch 100 data
@@ -19,17 +19,16 @@ class UserRepositoryImpl(private val scope: CoroutineScope):UserRepository {
     private val perPage = 20
     private var sinceId = 0
 
-    override fun getUsers(
+    override suspend fun getUsers(
         init: Boolean,
         requestState: RequestState<List<User>>
     ){
-        scope.launch {
             try {
                 //two cases we don't fetch more data
                 //1.back from navigation
                 //2.already fetch 100 data
                 if ((init && page>1) || page>5){
-                    return@launch
+                    return
                 }
 
                 requestState.isLoading.value = true
@@ -50,14 +49,12 @@ class UserRepositoryImpl(private val scope: CoroutineScope):UserRepository {
             }finally {
                 requestState.isLoading.value = false
             }
-        }
     }
 
-    override fun getUser(
+    override suspend fun getUser(
         userName: String,
         requestState: RequestState<UserDetail>
     ) {
-        scope.launch {
             try {
                 requestState.isLoading.value = true
 
@@ -68,17 +65,16 @@ class UserRepositoryImpl(private val scope: CoroutineScope):UserRepository {
             }finally {
                 requestState.isLoading.value = false
             }
-        }
     }
 }
 
 
 interface UserRepository{
-    fun getUsers(
+    suspend fun getUsers(
         init: Boolean,
         requestState: RequestState<List<User>>
     )
-    fun getUser(
+    suspend fun getUser(
         userName: String,
         requestState: RequestState<UserDetail>
     )

@@ -11,14 +11,14 @@ import com.tumhuang.displaygithubers.model.UserRepository
  */
 class UserUseCase(private val repository: UserRepository) {
 
-    fun getUsers(
+    suspend fun getUsers(
         init: Boolean,
         requestState: RequestState<List<User>>
     ) {
         repository.getUsers(init,requestState)
     }
 
-    fun getUser(
+    suspend fun getUser(
         userName: String,
         requestState: RequestState<UserDetail>
     ) {

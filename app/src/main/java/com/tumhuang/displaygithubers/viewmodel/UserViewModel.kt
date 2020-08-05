@@ -8,10 +8,11 @@ import com.tumhuang.displaygithubers.data.UserDetail
 import com.tumhuang.displaygithubers.helper.EventWrapper
 import com.tumhuang.displaygithubers.model.UserRepositoryImpl
 import com.tumhuang.displaygithubers.usecase.UserUseCase
+import kotlinx.coroutines.launch
 
 class UserViewModel: ViewModel() {
 
-    private val useCase : UserUseCase = UserUseCase(repository = UserRepositoryImpl(viewModelScope))
+    private val useCase : UserUseCase = UserUseCase(repository = UserRepositoryImpl())
 
     private val user = MutableLiveData<UserDetail>()
     private val isLoading = MutableLiveData<Boolean>()
@@ -19,7 +20,9 @@ class UserViewModel: ViewModel() {
 
     fun getUser(userName:String): RequestState<UserDetail> {
         val requestState = RequestState(user,isLoading,error)
-        useCase.getUser(userName,requestState)
+        viewModelScope.launch {
+            useCase.getUser(userName,requestState)
+        }
         return requestState
     }
 
